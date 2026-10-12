@@ -1,15 +1,17 @@
 //Rileye Tuttle
 //Dane Christisen
 
+#include<string.h>
+
 int main(){
   //Input string
-  char InputtString[50];
+  char InputString[50];
 
   //Main while loop
   while (true){
 
     //Exit command
-    if (InputtString == 'Exit'){
+    if (strcmp(InputString, "exit") == 1){
         return 0;
     }
   }

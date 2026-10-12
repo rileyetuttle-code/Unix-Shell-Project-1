@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include<string.h>
+
 int main(){
     //Input string
     char InputString[50];

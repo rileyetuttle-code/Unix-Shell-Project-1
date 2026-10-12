@@ -5,8 +5,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include<string.h>
-
 int main(){
     //Input string
     char InputString[50];
@@ -20,7 +18,17 @@ int main(){
             return 0;
         }
 
+        // input
         getline(&InputString, stdin); // getline to read in the command from user
+
+        
+
+
+        // parse input into commands
+
+
+
+        // execute commands using forks
 
 
     }

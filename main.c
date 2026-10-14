@@ -6,8 +6,10 @@
 #include <string.h>
 
 int main(){
-    //Input string
-    char InputString[50];
+    char InputString[50]; //Store user inputted string
+    char *cmd[64]; // array of pointers to commands in input line
+    char *line = NULL; // char array pointer to recieve command input temporarily
+    size_t cap = 0; // keeps track of how big cmd is that is read in from getline
 
     //Main while loop
      while (true){

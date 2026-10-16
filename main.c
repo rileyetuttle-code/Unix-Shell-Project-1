@@ -23,6 +23,8 @@ int main(void) {
         if(numChars < 0) // check for user using ctrl d to exit program so input returns -1
             done = true;
 
+        //WIP
+
         //Start of string seperator
         char delimiter = ' ';
         char *strsep(line, delimiter);

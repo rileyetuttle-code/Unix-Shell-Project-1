@@ -1,37 +1,46 @@
 //Riley Tuttle
 //Dane Christisen
+
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
 
-int main(){
-    char InputString[50]; //Store user inputted string
+int main(void) {
+    
+    bool done = false; // bool variable to control exiting loop
     char *cmd[64]; // array of pointers to commands in input line
     char *line = NULL; // char array pointer to recieve command input temporarily
     size_t cap = 0; // keeps track of how big cmd is that is read in from getline
 
-    //Main while loop
-     while (true){
-        printf("myshell> "); // basic shell prompt
+    // complete external loop that will end when exit bool variable turns to true
+    while(done == false)
+    {
+        printf("myshell> ");
 
-        //Exit command
-        if (strcmp(InputString, "exit") == 1){
-            return 0;
+        int numChars = getline(&line, &cap, stdin); // getline fills the line char array with the "string" from input and returns the number of characters in the array into our "numChars" variable
+        if(numChars < 0) // check for user using ctrl d to exit program so input returns -1
+            done = true;
+
+        //Start of string seperator
+        char delimiter = ' ';
+        char *strsep(line, delimiter);
+
+        //Fork and run the program
+        fork();
+        if(fork() != 0){
+            execv(strsep);
+            printf("No command found");
         }
-
-        // input
-        getline(&InputString, stdin); // getline to read in the command from user
-
-        
+        //wait for program to finish
+        wait();
+    
 
 
-        // parse input into commands
-
-
-
-        // execute commands using forks
 
 
     }
+
+
 }

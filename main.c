@@ -7,6 +7,10 @@
 #include <stdbool.h>
 #include <string.h>
 
+// header files that dont exist on windows, but will run in linux
+#include <unistd.h> 
+#include <sys/wait.h>
+
 int main(void) {
     
     bool done = false; // bool variable to control exiting loop
@@ -21,27 +25,39 @@ int main(void) {
 
         int numChars = getline(&line, &cap, stdin); // getline fills the line char array with the "string" from input and returns the number of characters in the array into our "numChars" variable
         if(numChars < 0) // check for user using ctrl d to exit program so input returns -1
+        {
             done = true;
-
-        //WIP
+            continue; // skip rest of the loop so the next while loop condition ends program
+        }
 
         //Start of string seperator
-        char delimiter = ' ';
-        char *strsep(line, delimiter);
+        char *delimiter =  " \n";
+        char *rest = line; // done to leave line to be used in getline because strsep moves whatever pointer given to it
+        int i = 0;
+        char *word = strsep(&rest, delimiter);
+
+        while(word != NULL)
+        {
+            if(word[0] != '\0') // skip empty spaces
+            {
+                cmd[i] = word;
+                i++;
+            }
+
+            word = strsep(&rest, delimiter);
+        }
+        cmd[i] = NULL; // last spot in the list ends with NULL to satisfy execvp
 
         //Fork and run the program
-        fork();
-        if(fork() != 0){
-            execv(strsep);
-            printf("No command found");
+        int p1 = fork();
+        if(p1 == 0){ // only child runs the program 
+            execvp(cmd[0], cmd);
+            printf("No command found\n");
+            exit(1); // child exits after command runs
         }
-        //wait for program to finish
-        wait();
+        //parent waits for program to finish
+        wait(NULL);
     
-
-
-
-
     }
 
 

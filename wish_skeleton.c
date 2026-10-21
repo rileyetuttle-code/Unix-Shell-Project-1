@@ -70,6 +70,11 @@ pid_t run_command(char *cmd) {
         /* TODO 4a: If rest contains another '>' (e.g. "ls > a > b"),
          *          call print_error() and return 0.
          */
+        if(strchr(rest, '>') != NULL ) // strchr searches a string for a character
+        {
+            print_error()
+            return 0;
+        }
 
         // Go through the words after '>'. There must be exactly one.
         char *tok;
@@ -80,11 +85,22 @@ pid_t run_command(char *cmd) {
             /* TODO 4b: If this is the first word (nfiles == 1),
              *          save it in outfile.
              */
+
+            if(nfiles == 1)
+            {
+                outfile = tok;
+            }
         }
 
         /* TODO 4c: If nfiles is not exactly 1 ("ls >" or "ls > a b"),
          *          call print_error() and return 0.
          */
+
+        if(nfiles != 1)
+        {
+            print_error();
+            return 0;
+        }
     }
 
     /* ================= Split into words ================= */
@@ -147,6 +163,12 @@ pid_t run_command(char *cmd) {
          *         access(fullpath, X_OK). It returns 0 if it is.
          *         If so, set found = 1 and break out of the loop.
          */
+
+         if(access(fullpath, X_OK))
+         {
+            found = 1;
+            break;
+         }
     }
     if (!found) {
         print_error();   // not in any directory of the path
@@ -197,6 +219,8 @@ int main(int argc, char *argv[]) {
         /* TODO 1a: More than one argument is an error:
          *          print_error() and exit(1).
          */
+        print_error(); 
+        exit(1);
     }
     if (argc == 2) {
         /* TODO 1b: Batch mode.
@@ -204,6 +228,14 @@ int main(int argc, char *argv[]) {
          *   - If input is NULL (can't open the file): print_error() and exit(1).
          *   - Set interactive = 0 so no prompt is printed.
          */
+        input = fopen(argv[1], "r");
+        if(input = NULL)
+        {
+            print_error();
+            exit(1);
+        }
+
+        interactive = 0;
     }
 
     // The search path starts out as just "/bin".

@@ -26,8 +26,7 @@ int main(void) {
         int numChars = getline(&line, &cap, stdin); // getline fills the line char array with the "string" from input and returns the number of characters in the array into our "numChars" variable
         if(numChars < 0) // check for user using ctrl d to exit program so input returns -1
         {
-            done = true;
-            continue; // skip rest of the loop so the next while loop condition ends program
+            exit(0);
         }
 
         //Start of string seperator
@@ -48,10 +47,18 @@ int main(void) {
         }
         cmd[i] = NULL; // last spot in the list ends with NULL to satisfy execvp
 
+        // built in exit command
+
+
+        // built in cd command
+
+
+        // build in path command
+
         //Fork and run the program
         int p1 = fork();
         if(p1 == 0){ // only child runs the program 
-            execvp(cmd[0], cmd);
+            execv(cmd[0], cmd);
             printf("No command found\n");
             exit(1); // child exits after command runs
         }

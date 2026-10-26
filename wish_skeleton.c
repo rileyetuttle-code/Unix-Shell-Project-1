@@ -72,7 +72,7 @@ pid_t run_command(char *cmd) {
          */
         if(strchr(rest, '>') != NULL ) // strchr searches a string for a character
         {
-            print_error()
+            print_error();
             return 0;
         }
 
@@ -128,7 +128,14 @@ pid_t run_command(char *cmd) {
          *   - With no arguments (argc == 1): exit(0).
          *   - With any arguments: print_error(), and keep running.
          */
-        return 0;
+        if(argc == 1)
+            exit(0);
+        else
+        {
+            print_error();
+            return 0;
+        }
+        
     }
 
     if (strcmp(args[0], "cd") == 0) {
@@ -137,7 +144,16 @@ pid_t run_command(char *cmd) {
          *   - Call chdir(args[1]). It returns non-zero on failure:
          *     then print_error().
          */
+        if(argc == 2)
+        {
+            if(chdir(args[1]) != 0)
+                print_error();
+        }
+        else
+            print_error();
+
         return 0;
+        
     }
 
     if (strcmp(args[0], "path") == 0) {
@@ -149,6 +165,26 @@ pid_t run_command(char *cmd) {
          *   - "path" with no arguments leaves the path empty, after which
          *     only built-ins can run.
          */
+        
+        for(int i = 0; i < npaths; i++)
+        {
+            free(paths[i]);
+            paths[i] = NULL;
+        }
+        npaths = 0;
+
+        for(int i = 1; i < argc; i++)
+        {
+            paths[npaths] = strdup(args[i]);
+            if(paths[npaths] == NULL)
+            {
+                print_error();
+                break;
+            }
+
+            npaths++;
+        }
+
         return 0;
     }
 
@@ -164,7 +200,7 @@ pid_t run_command(char *cmd) {
          *         If so, set found = 1 and break out of the loop.
          */
 
-         if(access(fullpath, X_OK))
+         if(access(fullpath, X_OK) == 0)
          {
             found = 1;
             break;
@@ -194,6 +230,17 @@ pid_t run_command(char *cmd) {
              *   - dup2(fd, STDERR_FILENO);   // stderr too
              *   - close(fd);                 // the original fd is no longer needed
              */
+            int fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+
+            if(fd < 0)
+            {
+                print_error();
+                exit(1);
+            }
+
+            dup2(fd, STDOUT_FILENO);
+            dup2(fd, STDERR_FILENO);
+            close(fd);
         }
 
         execv(fullpath, args);   // replaces the child with the program
@@ -229,7 +276,7 @@ int main(int argc, char *argv[]) {
          *   - Set interactive = 0 so no prompt is printed.
          */
         input = fopen(argv[1], "r");
-        if(input = NULL)
+        if(input == NULL)
         {
             print_error();
             exit(1);
